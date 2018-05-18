@@ -1,0 +1,38 @@
+<html>
+
+<head>
+</head>
+
+<body>
+    <button id="butt" />Pay with Vospay!</button>
+</body>
+<script src="http://localhost:3000/checkout-sdk.js"></script>
+<script>
+    let configOptions = {
+        "merchantKey": "234",
+        "transactionDetails": {
+            "orderID": "3571590", "items": [{
+                "id": "385332240",
+                "name": "CAVIAR SABUN MANDI / CAVIAR SHOWER SCRUB BPOM",
+                "price": 26000,
+                "quantity": 1
+            }],
+            "grossAmount": 50000,
+            "shipping": 24000,
+            "customerDetails": {
+                "id": "2750326",
+                "name": "Vitto Lewerissa",
+                "phone": "081210375905",
+                "shippingAddress": "Jl.Mawar 3 No. 22 Taman Yasmin\nBogor Barat Kota Bogor, 16310\nJawa Barat"
+            }
+        },
+        "logoURL": "https://ecs7.tokopedia.net/img/microsite-brand-resource/logo-tokopedia-asset.png"
+    };
+    let button = document.getElementById('butt');
+    button.addEventListener('click', function () {
+        window.vospay.payNow(configOptions);
+        console.log(configOptions);
+    });
+</script>
+
+</html>
