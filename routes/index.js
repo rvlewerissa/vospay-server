@@ -15,7 +15,7 @@ router.get('/frontend', function(req, res, next) {
 });
 
 router.get('/*', function(req, res, next) {
-  if (req.url === '/checkout/card?fixture=1')
+  if (req.url === '/checkout/card')
     res.sendFile(path.join(__dirname, '../public/index2.html'));
 });
 

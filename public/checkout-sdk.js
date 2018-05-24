@@ -375,7 +375,7 @@
   }
 
   var HOST = 'http://localhost:3000';
-  var RESOURCE_URL = HOST + '/checkout/card?fixture=1';
+  var RESOURCE_URL = HOST + '/checkout/card';
   var dialog = void 0;
 
   function payNow(config) {
