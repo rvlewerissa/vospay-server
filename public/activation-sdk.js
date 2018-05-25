@@ -22,6 +22,12 @@
     }
   }
 
+  var toString = Object.prototype.toString;
+
+  function isArray(input) {
+    return toString.call(input) === '[object Array]';
+  }
+
   var hasOwn = Object.prototype.hasOwnProperty;
 
   function hasOwnProperty(object, propertyName) {
@@ -56,7 +62,7 @@
       return _arr;
     }
     return function(arr, i) {
-      if (Array.isArray(arr)) {
+      if (isArray(arr)) {
         return arr;
       } else if (Symbol.iterator in Object(arr)) {
         return sliceIterator(arr, i);
@@ -72,8 +78,7 @@
     styles = styles || {};
     for (var key in styles) {
       if (hasOwnProperty(styles, key)) {
-        // TODO: Replace ES5 method call
-        if (Array.isArray(styles[key])) {
+        if (isArray(styles[key])) {
           var _styles$key = _slicedToArray(styles[key], 2),
             value = _styles$key[0],
             priority = _styles$key[1];
@@ -126,7 +131,7 @@
   }
 
   function _toConsumableArray(arr) {
-    if (Array.isArray(arr)) {
+    if (isArray(arr)) {
       for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
         arr2[i] = arr[i];
       }
@@ -168,7 +173,7 @@
       var data = Object(event.data) || {};
       var id = String(data.id);
       var actionName = String(data.action);
-      var args = Array.isArray(data.args) ? data.args : [];
+      var args = isArray(data.args) ? data.args : [];
       var method = actions[actionName];
       var result = method
         ? method.apply(undefined, _toConsumableArray(args))
@@ -370,14 +375,14 @@
   var RESOURCE_URL = HOST + '/activate';
   var dialog = void 0;
 
-  function payNow(config) {
+  function showActivation(config) {
     if (dialog) {
       return dialog.result;
     }
 
-    var onDone = config.onDone,
+    var onSuccess = config.onSuccess,
       onError = config.onError,
-      params = _objectWithoutProperties(config, ['onDone', 'onError']);
+      params = _objectWithoutProperties(config, ['onSuccess', 'onError']);
 
     disablePageScroll();
     var styleElement = attachStylesheet(styles);
@@ -452,15 +457,25 @@
           getParams: function getParams() {
             return params;
           },
-          close: function close(result) {
+          close: function close() {
             remove();
-            onDone && onDone(result);
-            resolve(result);
+            onSuccess && onSuccess();
+            resolve();
           },
-          error: function error(_error) {
-            onError && onError(_error);
-            reject(_error);
-          }
+          error: (function(_error) {
+            function error(_x) {
+              return _error.apply(this, arguments);
+            }
+
+            error.toString = function() {
+              return _error.toString();
+            };
+
+            return error;
+          })(function(error) {
+            onError && onError(error);
+            reject(error);
+          })
         }
       });
     });
@@ -481,8 +496,9 @@
   }
 
   window.vospay = {
+    ...window.vospay,
     version: version,
-    payNow: payNow,
+    showActivation: showActivation,
     close: function close() {
       dialog && dialog.remove();
     }

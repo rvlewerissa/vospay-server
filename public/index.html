@@ -1,37 +1,57 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
 </head>
 
 <body>
-    <button id="butt" />Pay with Vospay!</button>
+    <div>Add Config:</div>
+    <div id="summernote"></div>
+    <button id="butt1">Pay with Vospay</button>
+    <button id="butt2">Activate</button>
 </body>
 <script src="http://localhost:3000/checkout-sdk.js"></script>
+<script src="http://localhost:3000/activation-sdk.js"></script>
 <script>
-    let configOptions = {
-        "merchantKey": "f72e04d62fcccbb52a8bcad8ac6be048",
-        "transactionDetails": {
-            "orderID": "3571592", "items": [{
-                "id": "385332240",
-                "name": "CAVIAR SABUN MANDI / CAVIAR SHOWER SCRUB BPOM",
-                "price": 26000,
-                "quantity": 1
-            }],
-            "grossAmount": 50000,
-            "shipping": 24000,
-            "customerDetails": {
-                "id": "2750326",
-                "name": "Vitto Lewerissa",
-                "phone": "081210375905",
-                "shippingAddress": "Jl.Mawar 3 No. 22 Taman Yasmin\nBogor Barat Kota Bogor, 16310\nJawa Barat"
-            }
-        },
-        "logoURL": "https://ecs7.tokopedia.net/img/microsite-brand-resource/logo-tokopedia-asset.png"
-    };
-    let button = document.getElementById('butt');
-    button.addEventListener('click', function () {
+    $('#summernote').summernote({
+        height: 500,
+    });
+    $('#summernote').summernote('code', `
+    "merchantKey": "f72e04d62fcccbb52a8bcad8ac6be048",
+    "transactionDetails": {
+        "orderID": "3571592", "items": [{
+            "id": "385332240",
+            "name": "CAVIAR SABUN MANDI / CAVIAR SHOWER SCRUB BPOM",
+            "price": 26000,
+            "quantity": 1
+        }],
+        "grossAmount": 50000,
+        "shipping": 24000,
+        "customerDetails": {
+            "id": "2750326",
+            "name": "Vitto Lewerissa",
+            "phone": "081210375905",
+            "shippingAddress": "Jl.Mawar 3 No. 22 Taman Yasmin, Bogor Barat Kota Bogor, 16310, Jawa Barat"
+        }
+    },
+    "logoURL": "https://ecs7.tokopedia.net/img/microsite-brand-resource/logo-tokopedia-asset.png"`);
+</script>
+<script>
+    let button1 = document.getElementById('butt1');
+    button1.addEventListener('click', function () {
+        var markupStr = $('#summernote').summernote('code');
+        markupStr = `{${markupStr}}`;
+        let configOptions = JSON.parse(markupStr);
         window.vospay.payNow(configOptions);
-        console.log(configOptions);
+    });
+    let button2 = document.getElementById('butt2');
+    button2.addEventListener('click', function () {
+        window.vospay.showActivation({ clientKey: 'd038b6d1' });
     });
 </script>
 

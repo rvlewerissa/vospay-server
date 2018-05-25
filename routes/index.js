@@ -14,9 +14,12 @@ router.get('/frontend', function(req, res, next) {
   );
 });
 
-router.get('/*', function(req, res, next) {
-  if (req.url === '/checkout/card')
-    res.sendFile(path.join(__dirname, '../public/index2.html'));
+router.get('/checkout/card', function(req, res, next) {
+  res.sendFile(path.join(__dirname, '../public/index2.html'));
+});
+
+router.get('/activate', function(req, res, next) {
+  res.sendFile(path.join(__dirname, '../public/index2.html'));
 });
 
 module.exports = router;

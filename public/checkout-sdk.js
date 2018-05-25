@@ -167,11 +167,9 @@
   function attachFrameWithChannel(opts) {
     var actions = opts.actions || {};
     var subscription = listen(window, 'message', function(event) {
-      console.log('getting message from child');
       if (event.source !== frame.contentWindow) {
         return;
       }
-      console.log('sending love to child');
       var data = Object(event.data) || {};
       var id = String(data.id);
       var actionName = String(data.action);
@@ -180,7 +178,6 @@
       var result = method
         ? method.apply(undefined, _toConsumableArray(args))
         : null;
-      console.log('result: ', result);
       frame.contentWindow.postMessage(
         {type: 'response', id: id, data: result},
         '*'
